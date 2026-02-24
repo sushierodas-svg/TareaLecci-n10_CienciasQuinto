@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Actividad – Cuidando Mi Salud | 5° Primaria</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root {
+    --naranja: #db6015;
+    --amarillo: #f7be00;
+    --azul-oscuro: #244b5a;
+    --rojo: #993921;
+    --azul-claro: #f0f8ff;
+    --verde: #27ae60;
+    --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: #e8f4f8;
+    min-height: 100vh;
+    padding: 20px 14px 40px;
+  }
+
+  /* WRAPPER */
+  .wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(90deg, var(--azul-oscuro), #2d6070);
+    border-radius: 16px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-left .brand { color: var(--amarillo); font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+  .header-left h1 { color: white; font-size: 18px; font-weight: 900; margin-top: 2px; }
+  .header-left .sub { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 2px; }
+  .score-badge {
+    background: rgba(255,255,255,0.12);
+    border: 2px solid var(--amarillo);
+    border-radius: 12px;
+    padding: 10px 20px;
+    text-align: center;
+    min-width: 90px;
+  }
+  .score-label { color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+  .score-num { color: var(--amarillo); font-size: 28px; font-weight: 900; line-height: 1.1; }
+  .score-total { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+  /* CRITERIO CARD */
+  .criterio {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(36,75,90,0.10);
+  }
+  .criterio-header {
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .criterio-header.c1 { background: linear-gradient(90deg, #fff5ee, #fff8f4); border-bottom: 3px solid var(--naranja); }
+  .criterio-header.c2 { background: linear-gradient(90deg, #f0fff4, #f7fff9); border-bottom: 3px solid var(--verde); }
+  .crit-badge {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: white; flex-shrink: 0;
+  }
+  .crit-badge.c1 { background: var(--naranja); }
+  .crit-badge.c2 { background: var(--verde); }
+  .crit-info h3 { font-size: 14.5px; font-weight: 800; color: var(--azul-oscuro); }
+  .crit-info p { font-size: 12px; color: #667; margin-top: 1px; }
+  .crit-pts {
+    margin-left: auto;
+    background: var(--azul-claro);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--azul-oscuro);
+    white-space: nowrap;
+  }
+  .criterio-body { padding: 20px 22px; }
+
+  /* STATUS PILL */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; font-weight: 700; margin-bottom: 14px;
+  }
+  .status-pill.pending { background: #fff3cd; color: #856404; }
+  .status-pill.done { background: #d1f2e1; color: #155724; }
+
+  /* INSTRUCCION */
+  .instruccion {
+    background: var(--azul-claro);
+    border-left: 4px solid var(--naranja);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--azul-oscuro);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .instruccion.verde { border-left-color: var(--verde); }
+
+  /* OPTIONS */
+  .opts { display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    background: var(--azul-claro);
+    border: 2px solid #c0dce8;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: #334;
+    transition: all 0.2s;
+    font-family: var(--font);
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--naranja); background: #fff5ee; }
+  .opt.correct { background: #d1f2e1; border-color: var(--verde); color: #155724; font-weight: 700; }
+  .opt.wrong   { background: #fdecea; border-color: #e74c3c; color: #a93226; }
+  .opt-letter {
+    min-width: 24px; height: 24px;
+    background: var(--azul-oscuro); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; flex-shrink: 0;
+  }
+  .opt.correct .opt-letter { background: var(--verde); }
+  .opt.wrong .opt-letter   { background: #e74c3c; }
+
+  /* FEEDBACK */
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok  { background: #d1f2e1; color: #155724; border-left: 4px solid var(--verde); }
+  .feedback.err { background: #fdecea; color: #a93226; border-left: 4px solid #e74c3c; }
+
+  .retry-btn {
+    margin-top: 8px; display: inline-block;
+    background: var(--naranja); color: white;
+    border: none; border-radius: 20px;
+    padding: 7px 18px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: var(--font);
+  }
+  .retry-btn:hover { background: var(--rojo); }
+
+  /* MATCHING GAME (CRITERIO 2) */
+  .match-instructions {
+    font-size: 13px; color: #556; margin-bottom: 12px; line-height: 1.5;
+  }
+  .match-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .match-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .match-situation {
+    background: var(--azul-claro);
+    border-radius: 10px; padding: 10px 14px;
+    font-size: 13px; color: var(--azul-oscuro); font-weight: 600;
+    flex: 1; min-width: 180px;
+  }
+  .match-arrow { font-size: 18px; color: #aaa; flex-shrink: 0; }
+  .match-select {
+    border: 2px solid #c0dce8; border-radius: 10px;
+    padding: 9px 12px; font-size: 13px;
+    font-family: var(--font); color: var(--azul-oscuro);
+    background: white; cursor: pointer;
+    flex: 1; min-width: 160px;
+    transition: border-color 0.2s;
+  }
+  .match-select:focus { outline: none; border-color: var(--naranja); }
+  .match-select.correct { border-color: var(--verde); background: #d1f2e1; color: #155724; font-weight: 700; }
+  .match-select.wrong   { border-color: #e74c3c; background: #fdecea; color: #a93226; }
+
+  .check-btn {
+    margin-top: 14px;
+    background: var(--azul-oscuro); color: white;
+    border: none; border-radius: 20px;
+    padding: 11px 26px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: var(--font);
+    transition: background 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .check-btn:hover { background: var(--naranja); }
+  .check-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+  /* PUNTO GANADO */
+  .punto-ganado {
+    display: none;
+    align-items: center; gap: 10px;
+    background: #d1f2e1; border-radius: 10px;
+    padding: 10px 16px; margin-top: 12px;
+    border-left: 4px solid var(--verde);
+  }
+  .punto-ganado.show { display: flex; }
+  .punto-ganado span { font-size: 13.5px; font-weight: 700; color: #155724; }
+
+  /* RESULTADO FINAL */
+  .resultado-final {
+    display: none;
+    background: white;
+    border-radius: 16px;
+    padding: 30px 24px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(36,75,90,0.10);
+  }
+  .resultado-final.show { display: block; }
+  .resultado-icon { font-size: 64px; margin-bottom: 10px; }
+  .resultado-titulo { font-size: 24px; font-weight: 900; color: var(--azul-oscuro); margin-bottom: 6px; }
+  .resultado-pts {
+    font-size: 42px; font-weight: 900;
+    margin: 10px 0;
+  }
+  .resultado-pts.pts2 { color: var(--verde); }
+  .resultado-pts.pts1 { color: var(--naranja); }
+  .resultado-pts.pts0 { color: var(--rojo); }
+  .resultado-msg { font-size: 14px; color: #556; max-width: 460px; margin: 0 auto 14px; line-height: 1.6; }
+  .resultado-criterios {
+    display: flex; justify-content: center; gap: 16px;
+    flex-wrap: wrap; margin-top: 10px;
+  }
+  .rc-pill {
+    border-radius: 20px; padding: 7px 18px;
+    font-size: 13px; font-weight: 700;
+  }
+  .rc-pill.ok  { background: #d1f2e1; color: #155724; }
+  .rc-pill.err { background: #fdecea; color: #a93226; }
+
+  /* INSTRUCCIONES GENERALES */
+  .instrucciones-generales {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 20px rgba(36,75,90,0.10);
+    border-top: 5px solid var(--amarillo);
+  }
+  .ig-title {
+    font-size: 15px; font-weight: 900; color: var(--azul-oscuro);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .ig-steps { display: flex; flex-direction: column; gap: 8px; }
+  .ig-step {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--azul-claro); border-radius: 10px; padding: 10px 14px;
+  }
+  .ig-num {
+    background: var(--naranja); color: white; border-radius: 50%;
+    width: 26px; height: 26px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 900; flex-shrink: 0;
+  }
+  .ig-text { font-size: 13.5px; color: var(--azul-oscuro); line-height: 1.5; }
+  .ig-note {
+    margin-top: 12px; background: #fff8e1;
+    border-left: 4px solid var(--amarillo);
+    border-radius: 8px; padding: 9px 14px;
+    font-size: 13px; color: #7a5f00; line-height: 1.5;
+  }
+
+  /* DOWNLOAD BUTTON */
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--azul-oscuro), #2d6070);
+    color: white; border: none; border-radius: 12px;
+    padding: 13px 28px; font-size: 15px; font-weight: 800;
+    cursor: pointer; font-family: var(--font);
+    transition: all 0.2s; margin-top: 16px;
+    box-shadow: 0 4px 14px rgba(36,75,90,0.25);
+  }
+  .download-btn:hover { background: linear-gradient(135deg, var(--naranja), var(--rojo)); transform: translateY(-1px); }
+  .download-btn:active { transform: translateY(0); }
+  .download-btn.loading { background: #aaa; cursor: not-allowed; transform: none; }
+
+  /* CAPTURE CARD */
+  #capture-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    border: 3px solid var(--verde);
+  }
+    .header-left h1 { font-size: 15px; }
+    .match-row { flex-direction: column; align-items: flex-start; }
+    .match-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="brand">🏫 COLEGIO ESCOLARIS · CIENCIAS NATURALES · 5° PRIMARIA</div>
+      <h1>Actividad: Cuidando Mi Salud</h1>
+      <div class="sub">Lección 10 · Prevención de Enfermedades · Valor: 2 puntos</div>
+    </div>
+    <div class="score-badge">
+      <div class="score-label">PUNTAJE</div>
+      <div class="score-num" id="score-display">0</div>
+      <div class="score-total">de 2 pts</div>
+    </div>
+  </div>
+
+  <!-- INSTRUCCIONES GENERALES -->
+  <div class="instrucciones-generales">
+    <div class="ig-title">📋 Instrucciones generales</div>
+    <div class="ig-steps">
+      <div class="ig-step">
+        <div class="ig-num">1</div>
+        <div class="ig-text">Lee con atención cada criterio antes de responder. No hay límite de tiempo.</div>
+      </div>
+      <div class="ig-step">
+        <div class="ig-num">2</div>
+        <div class="ig-text"><strong>Criterio 1:</strong> Selecciona la respuesta correcta. Si te equivocas, podrás intentarlo nuevamente hasta responder bien.</div>
+      </div>
+      <div class="ig-step">
+        <div class="ig-num">3</div>
+        <div class="ig-text"><strong>Criterio 2:</strong> Relaciona cada situación con la medida de prevención correcta usando el menú desplegable. Presiona <strong>"Verificar"</strong> cuando termines los tres.</div>
+      </div>
+      <div class="ig-step">
+        <div class="ig-num">4</div>
+        <div class="ig-text">Al completar ambos criterios verás tu resultado final. <strong>Descarga el comprobante en PNG y súbelo a Canvas.</strong> 📥</div>
+      </div>
+    </div>
+    <div class="ig-note">
+      ⚠️ <strong>Importante:</strong> Esta actividad vale <strong>2 puntos</strong> en total — 1 punto por criterio. Debes completar ambos para obtener la nota completa.
+    </div>
+  </div>
+
+  <!-- ===== CRITERIO 1 ===== -->
+  <div class="criterio" id="card-c1">
+    <div class="criterio-header c1">
+      <div class="crit-badge c1">1</div>
+      <div class="crit-info">
+        <h3>Criterio 1 – Comprensión</h3>
+        <p>Identifica conceptos clave sobre prevención de enfermedades</p>
+      </div>
+      <div class="crit-pts">1 punto</div>
+    </div>
+    <div class="criterio-body">
+      <div class="status-pill pending" id="status-c1">⏳ Pendiente</div>
+      <div class="instruccion">
+        📋 <strong>Instrucción:</strong> Lee con atención y selecciona la respuesta correcta. Solo hay una opción correcta. Tienes los intentos que necesites.
+      </div>
+      <p style="font-size:14.5px; font-weight:700; color:var(--azul-oscuro); margin-bottom:12px;">
+        María se siente completamente sana, pero su médica le dice que debe hacerse un chequeo médico para revisar si tiene alguna infección. María piensa que no es necesario porque no tiene ningún síntoma. ¿Quién tiene la razón?
+      </p>
+      <div class="opts" id="c1-opts">
+        <button class="opt" onclick="checkC1(this, false)">
+          <span class="opt-letter">A</span>
+          María, porque si no hay síntomas no hay enfermedad.
+        </button>
+        <button class="opt" onclick="checkC1(this, false)">
+          <span class="opt-letter">B</span>
+          Ninguna, los chequeos médicos solo sirven cuando uno está muy enfermo.
+        </button>
+        <button class="opt" onclick="checkC1(this, true)">
+          <span class="opt-letter">C</span>
+          La médica, porque muchas infecciones no presentan síntomas al inicio y solo se detectan con pruebas médicas.
+        </button>
+        <button class="opt" onclick="checkC1(this, false)">
+          <span class="opt-letter">D</span>
+          María, porque los chequeos médicos son solo para personas mayores.
+        </button>
+      </div>
+      <div class="feedback" id="c1-fb"></div>
+      <div class="punto-ganado" id="punto-c1">
+        <span style="font-size:22px">🏅</span>
+        <span>¡Ganaste 1 punto en el Criterio 1!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CRITERIO 2 ===== -->
+  <div class="criterio" id="card-c2">
+    <div class="criterio-header c2">
+      <div class="crit-badge c2">2</div>
+      <div class="crit-info">
+        <h3>Criterio 2 – Aplicación</h3>
+        <p>Relaciona situaciones del diario con las medidas de prevención correctas</p>
+      </div>
+      <div class="crit-pts">1 punto</div>
+    </div>
+    <div class="criterio-body">
+      <div class="status-pill pending" id="status-c2">⏳ Pendiente</div>
+      <div class="instruccion verde">
+        📋 <strong>Instrucción:</strong> Une cada situación con la medida de prevención que corresponde. Selecciona del menú la opción correcta para cada caso. Cuando termines, presiona <strong>"Verificar"</strong>.
+      </div>
+      <div class="match-wrap" id="match-wrap">
+
+        <div class="match-row">
+          <div class="match-situation">👦 Juan tiene 11 años. Su médico le recomienda aplicarse una vacuna para protegerse de un virus en el futuro.</div>
+          <div class="match-arrow">→</div>
+          <select class="match-select" id="ms0">
+            <option value="">— Elige una medida —</option>
+            <option value="vacuna">💉 Vacunarse según el calendario médico</option>
+            <option value="higiene">🧼 Lavarse las manos frecuentemente</option>
+            <option value="medico">🏥 Ir al médico solo cuando hay fiebre</option>
+            <option value="ignorar">🚫 Ignorar la recomendación si se siente bien</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <div class="match-situation">👧 Sofía encontró información sobre una enfermedad en una página de redes sociales sin autor ni fuente.</div>
+          <div class="match-arrow">→</div>
+          <select class="match-select" id="ms1">
+            <option value="">— Elige una medida —</option>
+            <option value="compartir">📲 Compartirla con todos sus amigos</option>
+            <option value="creer">✅ Creerla porque está en internet</option>
+            <option value="fuentes">📚 Buscar la información en fuentes confiables como la OMS o su médico</option>
+            <option value="ignorar2">🚫 No leer nada sobre salud</option>
+          </select>
+        </div>
+
+        <div class="match-row">
+          <div class="match-situation">👦 Pedro tiene dudas sobre su cuerpo y su salud pero le da vergüenza preguntar.</div>
+          <div class="match-arrow">→</div>
+          <select class="match-select" id="ms2">
+            <option value="">— Elige una medida —</option>
+            <option value="guardar">🤐 Guardar las dudas para siempre</option>
+            <option value="amigos">🧒 Preguntarle solo a amigos de su misma edad</option>
+            <option value="adulto">🗣️ Hablar con un adulto de confianza o su médico</option>
+            <option value="internet">📱 Buscar respuestas en redes sociales</option>
+          </select>
+        </div>
+
+      </div>
+      <button class="check-btn" id="check-c2-btn" onclick="checkC2()">✅ Verificar respuestas</button>
+      <div class="feedback" id="c2-fb"></div>
+      <div class="punto-ganado" id="punto-c2">
+        <span style="font-size:22px">🏅</span>
+        <span>¡Ganaste 1 punto en el Criterio 2!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADO FINAL -->
+  <div class="resultado-final" id="resultado-final">
+
+    <!-- CAPTURE CARD — esta sección es la que se descarga como PNG -->
+    <div id="capture-card">
+      <div style="background:linear-gradient(90deg,var(--azul-oscuro),#2d6070);border-radius:12px;padding:12px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="color:var(--amarillo);font-size:11px;font-weight:800;letter-spacing:1px;">🏫 COLEGIO ESCOLARIS</div>
+          <div style="color:white;font-size:13px;font-weight:700;margin-top:2px;">Ciencias Naturales · 5° Primaria · Lección 10</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.7);font-size:11px;" id="res-fecha"></div>
+      </div>
+
+      <div class="resultado-icon" id="res-icon"></div>
+      <div class="resultado-titulo" id="res-titulo"></div>
+      <div class="resultado-pts" id="res-pts"></div>
+      <div class="resultado-msg" id="res-msg"></div>
+      <div class="resultado-criterios">
+        <div class="rc-pill" id="rc1"></div>
+        <div class="rc-pill" id="rc2"></div>
+      </div>
+
+      <div style="margin-top:16px;padding-top:14px;border-top:2px dashed #dde;font-size:12px;color:#aab;">
+        📅 Comprobante generado automáticamente · Actividad: Cuidando Mi Salud
+      </div>
+    </div>
+    <!-- FIN CAPTURE CARD -->
+
+    <button class="download-btn" id="download-btn" onclick="downloadPNG()">
+      📥 Descargar comprobante PNG
+    </button>
+    <p style="font-size:12px;color:#778;margin-top:8px;">Descarga la imagen y súbela a Canvas para registrar tu nota.</p>
+
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+  let puntaje = 0;
+  let c1Done = false;
+  let c2Done = false;
+
+  const correctasC2 = ['vacuna', 'fuentes', 'adulto'];
+
+  // ---- CRITERIO 1 ----
+  function checkC1(btn, isCorrect) {
+    if (c1Done) return;
+    const opts = document.querySelectorAll('#c1-opts .opt');
+    const fb = document.getElementById('c1-fb');
+    opts.forEach(o => o.disabled = true);
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      fb.className = 'feedback show ok';
+      fb.innerHTML = '✅ <strong>¡Excelente!</strong> Tienes razón. Las enfermedades de transmisión muchas veces no muestran síntomas al inicio. Los chequeos médicos regulares son la única forma de detectarlas a tiempo. La médica tiene razón al recomendarlo.';
+      c1Done = true;
+      puntaje++;
+      updateScore();
+      document.getElementById('status-c1').className = 'status-pill done';
+      document.getElementById('status-c1').textContent = '✅ Completado – 1 / 1 pt';
+      document.getElementById('punto-c1').classList.add('show');
+      checkFinal();
+    } else {
+      btn.classList.add('wrong');
+      fb.className = 'feedback show err';
+      fb.innerHTML = '❌ <strong>Respuesta incorrecta.</strong> Recuerda que muchas enfermedades no presentan síntomas visibles al comienzo. Los médicos recomiendan chequeos preventivos precisamente para detectarlas antes de que avancen. <button class="retry-btn" onclick="resetC1()">🔄 Intentar de nuevo</button>';
+    }
+  }
+
+  function resetC1() {
+    document.querySelectorAll('#c1-opts .opt').forEach(o => {
+      o.disabled = false;
+      o.className = 'opt';
+    });
+    const fb = document.getElementById('c1-fb');
+    fb.className = 'feedback';
+    fb.innerHTML = '';
+  }
+
+  // ---- CRITERIO 2 ----
+  function checkC2() {
+    if (c2Done) return;
+    const selects = [
+      document.getElementById('ms0'),
+      document.getElementById('ms1'),
+      document.getElementById('ms2'),
+    ];
+
+    // Check all selected
+    const allSelected = selects.every(s => s.value !== '');
+    if (!allSelected) {
+      const fb = document.getElementById('c2-fb');
+      fb.className = 'feedback show err';
+      fb.innerHTML = '⚠️ Por favor selecciona una opción para <strong>cada situación</strong> antes de verificar.';
+      return;
+    }
+
+    let correctCount = 0;
+    selects.forEach((sel, i) => {
+      sel.disabled = true;
+      if (sel.value === correctasC2[i]) {
+        sel.className = 'match-select correct';
+        correctCount++;
+      } else {
+        sel.className = 'match-select wrong';
+      }
+    });
+
+    const fb = document.getElementById('c2-fb');
+    const btn = document.getElementById('check-c2-btn');
+
+    if (correctCount === 3) {
+      fb.className = 'feedback show ok';
+      fb.innerHTML = '✅ <strong>¡Perfecto!</strong> Relacionaste correctamente las 3 situaciones con sus medidas de prevención. ¡Demuestras que comprendes cómo aplicar lo aprendido!';
+      btn.disabled = true;
+      c2Done = true;
+      puntaje++;
+      updateScore();
+      document.getElementById('status-c2').className = 'status-pill done';
+      document.getElementById('status-c2').textContent = '✅ Completado – 1 / 1 pt';
+      document.getElementById('punto-c2').classList.add('show');
+      checkFinal();
+    } else {
+      fb.className = 'feedback show err';
+      fb.innerHTML = `❌ Tuviste <strong>${correctCount} de 3</strong> correctas. Revisa las que están marcadas en rojo y vuelve a intentarlo. <button class="retry-btn" onclick="resetC2()">🔄 Intentar de nuevo</button>`;
+    }
+  }
+
+  function resetC2() {
+    const selects = [
+      document.getElementById('ms0'),
+      document.getElementById('ms1'),
+      document.getElementById('ms2'),
+    ];
+    selects.forEach(s => {
+      s.disabled = false;
+      s.className = 'match-select';
+      s.value = '';
+    });
+    const fb = document.getElementById('c2-fb');
+    fb.className = 'feedback';
+    fb.innerHTML = '';
+    document.getElementById('check-c2-btn').disabled = false;
+  }
+
+  // ---- SCORE ----
+  function updateScore() {
+    document.getElementById('score-display').textContent = puntaje;
+  }
+
+  // ---- RESULTADO FINAL ----
+  function checkFinal() {
+    if (!c1Done || !c2Done) return;
+
+    const res = document.getElementById('resultado-final');
+    const icon = document.getElementById('res-icon');
+    const titulo = document.getElementById('res-titulo');
+    const pts = document.getElementById('res-pts');
+    const msg = document.getElementById('res-msg');
+
+    res.classList.add('show');
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (puntaje === 2) {
+      icon.textContent = '🏆';
+      titulo.textContent = '¡Actividad completada con éxito!';
+      pts.textContent = '2 / 2 puntos';
+      pts.className = 'resultado-pts pts2';
+      msg.textContent = 'Demostraste que comprendes la importancia de la prevención de enfermedades y sabes cómo aplicar ese conocimiento en situaciones reales. ¡Excelente trabajo!';
+    } else if (puntaje === 1) {
+      icon.textContent = '⭐';
+      titulo.textContent = '¡Buen esfuerzo!';
+      pts.textContent = '1 / 2 puntos';
+      pts.className = 'resultado-pts pts1';
+      msg.textContent = 'Lograste una parte de la actividad. Te recomendamos repasar la guía de la Lección 10 y volver a intentar el criterio pendiente. ¡Tú puedes lograrlo!';
+    }
+
+    document.getElementById('rc1').textContent = c1Done ? '✅ Criterio 1: 1 / 1 pt' : '❌ Criterio 1: 0 / 1 pt';
+    document.getElementById('rc1').className = 'rc-pill ' + (c1Done ? 'ok' : 'err');
+    document.getElementById('rc2').textContent = c2Done ? '✅ Criterio 2: 1 / 1 pt' : '❌ Criterio 2: 0 / 1 pt';
+    document.getElementById('rc2').className = 'rc-pill ' + (c2Done ? 'ok' : 'err');
+
+    // Fecha y hora en el comprobante
+    const now = new Date();
+    const fechaStr = now.toLocaleDateString('es-GT', { year:'numeric', month:'long', day:'numeric' })
+      + ' · ' + now.toLocaleTimeString('es-GT', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('res-fecha').textContent = fechaStr;
+  }
+
+  // ---- DESCARGA PNG ----
+  function downloadPNG() {
+    const btn = document.getElementById('download-btn');
+    btn.classList.add('loading');
+    btn.textContent = '⏳ Generando imagen...';
+
+    const card = document.getElementById('capture-card');
+    html2canvas(card, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      logging: false
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'comprobante_ciencias_leccion10.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      btn.classList.remove('loading');
+      btn.innerHTML = '✅ ¡Descargado! Súbelo a Canvas';
+      btn.style.background = 'linear-gradient(135deg, var(--verde), #1e8449)';
+    }).catch(() => {
+      btn.classList.remove('loading');
+      btn.innerHTML = '📥 Descargar comprobante PNG';
+    });
+  }
+</script>
+</body>
+</html>
